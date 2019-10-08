@@ -1,6 +1,10 @@
 # broken-links
 
-`broken-links` will take the output of `git ls-files` search all the files mentioned for anything that looks like a link, and perform a `get` request to see if the link is still valid.
+`broken-links` will 
+
+1. Take the output of `git ls-files` 
+2. Search all the files mentioned for anything that looks like a link
+3. Perform a `get` request and print out the status code
 
 ## Build from source:
 
