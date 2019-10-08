@@ -23,3 +23,9 @@ cargo build
 ```
 
 This will create a binary and place it in `target/release`. You can add this location to your `$PATH` or copy this binary to a location already in your `$PATH`, or just move it to the repository you want check.
+
+Goto the directory you want to test and:
+
+```
+broken-links
+```
