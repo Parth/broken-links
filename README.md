@@ -43,7 +43,7 @@ Pass: https://en.wikipedia.org/wiki/Mercator_projection#Mathematics_of_the_Merca
 Pass: https://en.wikipedia.org/wiki/Mercator_projection#Mathematics_of_the_Mercator_projection => 200 OK
 Fail: http://quicksetup.me => http://quicksetup.me/: timed out
 Fail: http://quicksetup.me => http://quicksetup.me/: timed out
-Pass: h`ttp://go.sap.com/index.html => 200 OK
+Pass: http://go.sap.com/index.html => 200 OK
 Fail: http://autoai.org => http://autoai.org/: timed out
 Pass: http://autoai.org => 200 OK
 Pass: http://flask.pocoo.org/ => 200 OK
