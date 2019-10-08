@@ -1,5 +1,7 @@
 # broken-links
 
+Find all the broken links in your copy!
+
 `broken-links` will 
 
 1. Take the output of `git ls-files` 
