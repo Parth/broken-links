@@ -52,9 +52,10 @@ fn get_file_content(file_name: String) -> String {
     let mut contents = String::new();
     match file {
         Ok(mut f) => {
-            f.read_to_string(&mut contents)
-                .expect(&format!("Failed to read file: {}", &file_name)); // Should this cause a failure?
-            ()
+            let result = f.read_to_string(&mut contents);
+            if result.is_err() {
+                eprintln!("Warn: Failed to read file: {}", file_name);
+            }
         }
         Err(e) => eprintln!("Could not read file: {}, error: {}", &file_name, e),
     }
