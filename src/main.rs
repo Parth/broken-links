@@ -15,6 +15,7 @@ fn main() {
 }
 
 fn test_url(uri: String) {
+    println!("\tTesting link {}", uri);
     let request_attempt = reqwest::get(&uri);
 
     match request_attempt {
@@ -26,7 +27,7 @@ fn test_url(uri: String) {
             } else {
                 eprintln!("Fail: {} => {}", uri, status);
             }
-        },
+        }
         Err(e) => eprintln!("Fail: {} => {}", uri, e),
     }
 }
@@ -67,7 +68,16 @@ fn get_file_names() -> Vec<String> {
     let command = Command::new("git")
         .arg("ls-files")
         .output()
-        .expect("Could not find git"); // TODO handle the non git folder case
+        .expect("Could not find git");
+
+    if command.status.code().unwrap() == 128 {
+        let error = String::from_utf8_lossy(&command.stderr)
+            .to_owned()
+            .to_string();
+        
+        eprint!("{}", error);
+        std::process::exit(128);
+    }
 
     let output = String::from_utf8_lossy(&command.stdout)
         .to_owned()
