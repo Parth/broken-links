@@ -1,4 +1,5 @@
 use regex::Regex;
+use std::collections::HashMap;
 use std::fs::File;
 use std::io::prelude::*;
 use std::process::Command;
@@ -7,16 +8,24 @@ use std::process::Command;
 extern crate lazy_static;
 
 fn main() {
+    let mut links: HashMap<String, bool> = HashMap::new();
+
     get_file_names()
         .into_iter()
         .map(get_file_content)
         .map(find_links)
-        .for_each(|x| x.into_iter().for_each(test_url));
+        .for_each(|x| x.into_iter().for_each(|link| test_url(&link, &mut links)));
 }
 
-fn test_url(uri: String) {
-    println!("\tTesting link {}", uri);
-    let request_attempt = reqwest::get(&uri);
+fn test_url(uri: &String, cache: &mut HashMap<String, bool>) {
+    match cache.get(uri) {
+        Some(_) => return,
+        None => {}
+    };
+
+    cache.insert(uri.to_string(), true);
+
+    let request_attempt = reqwest::get(uri);
 
     match request_attempt {
         Ok(request) => {
@@ -35,7 +44,7 @@ fn test_url(uri: String) {
 fn find_links(file_contents: String) -> Vec<String> {
     lazy_static! {
         static ref RE: Regex =
-            Regex::new(r#"(?:(?:https?)://(?:[a-z\d]+\.))(?:(?:[^\s()<>]+|\((?:[^\s()<>]+|(?:\([^\s()<>]+\)))?\))+(?:\((?:[^\s()<>]+|(?:\(?:[^\s()<>]+\)))?\)|[^\s`!()\[\]{};:'.,<>?«»“”"\\‘’]))?"#).unwrap();
+            Regex::new(r#"https?://(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)"#).unwrap();
     }
 
     let mut links: Vec<String> = Vec::new();
@@ -74,7 +83,6 @@ fn get_file_names() -> Vec<String> {
         let error = String::from_utf8_lossy(&command.stderr)
             .to_owned()
             .to_string();
-        
         eprint!("{}", error);
         std::process::exit(128);
     }
